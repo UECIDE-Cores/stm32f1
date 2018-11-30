@@ -1,0 +1,16 @@
+Source: stm32f1
+Section: main
+Priority: extra
+Maintainer: Matt Jenkins <matt@majenko.co.uk>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.4
+XBSC-Family: maple
+
+Package: stm32f1
+Architecture: all
+XBSC-Group: Cores
+XBSC-Subgroup: STM32
+Description: STM32F1
+
+
+

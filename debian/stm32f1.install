@@ -1,0 +1,3 @@
+core.txt cores/stm32f1
+maple/ cores/stm32f1
+system/ cores/stm32f1
