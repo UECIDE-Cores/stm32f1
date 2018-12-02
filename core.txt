@@ -4,21 +4,40 @@ family=maple
 group=Maple
 compiler=arm-none-eabi-gcc-7
 
+
+build.error_led_port=GPIOB
+build.error_led_pin=1
+
+
 core.library.core=maple::maple/stm32f1
 core.library.maple=maple/libmaple::maple/libmaple/stm32f1::maple/libmaple/stm32f1/performance::maple/libmaple/usb::maple/libmaple/usb/usb_lib::maple/libmaple/usb/stm32f1
 
 
-core.version=180
+core.version=10807
 
 core.includes=-I${core:root}/system/libmaple/include::-I${core:root}/system/libmaple/::-I${core:root}/system/libmaple/usb/stm32f1::-I${core:root}/system/libmaple/usb/usb_lib
 
 
-core.flags=-g::-w::-ffunction-sections::-fdata-sections::-nostdlib::-MMD::-mthumb::${option:opt.optimise}::--param::max-inline-insns-single=500::-Dprintf=iprintf::-DARDUINO=${core.version}::-D${board}::-march=armv7-m::-mcpu=${build.cpu}::${core.includes}::-DF_CPU=${build.f_cpu}::-D${build.vect}::-D__STM32F1__::-DARDUINO_ARCH_STM32
-core.cflags=-std=gnu11
-core.cppflags=-std=gnu++11::-fno-threadsafe-statics::-fno-rtti::-fno-exceptions
-core.ldflags=-L${core.root}/lib::-L${board:root}/ld::-T${board:root}/${build.ldscript}::-Wl,--gc-sections,-u,main::-mthumb::${option:lto.ldflags}
+#core.flags=-g::-w::-ffunction-sections::-fdata-sections::-nostdlib::-MMD::-mthumb::${option:opt.optimise}::--param::max-inline-insns-single=500::-DARDUINO=${core.version}::-DARDUINO_${board}::-march=armv7-m::-mcpu=${build.cpu}::${core.includes}::-DF_CPU=${build.f_cpu}::-D${build.vect}::-D__STM32F1__::-DARDUINO_ARCH_STM32::-DARDUINO_ARCH_STM32F1::-DERROR_LED_PORT=${build.error_led_port}::-DERROR_LED_PIN=${build.error_led_pin}::-DDEBUG_LEVEL=DEBUG_NONE
 
-core.asflags=${core.flags}::${board.flags}
+core.cflags=-g::${option:opt.optimise}::-DDEBUG_LEVEL=DEBUG_NONE::-std=gnu11::-MMD::-ffunction-sections::-fdata-sections::-nostdlib::--param::max-inline-insns-single=500::-D${build.vect}::-DERROR_LED_PORT=${build.error_led_port}::-DERROR_LED_PIN=${build.error_led_pin}::-mcpu=${build.cpu}::-DF_CPU=${build.f_cpu}::-DARDUINO=${core.version}::-DARDUINO_${board}::-DARDUINO_ARCH_STM32F1::-mthumb::-march=armv7-m::-D__STM32F1__::-DARDUINO_ARCH_STM32::${core.includes}
+
+
+core.cppflags=${option:opt.optimise}::-g::-DDEBUG_LEVEL=DEBUG_NONE::-std=gnu++11::-MMD::-ffunction-sections::-fdata-sections::-nostdlib::--param::max-inline-insns-single=500::-fno-rtti::-fno-exceptions::-D${build.vect}::-DERROR_LED_PORT=${build.error_led_port}::-DERROR_LED_PIN=${build.error_led_pin}::-mcpu=${build.cpu}::-DF_CPU=${build.f_cpu}::-DARDUINO=${core.version}::-DARDUINO_${board}::-DARDUINO_ARCH_STM32F1::-mthumb::-march=armv7-m::-D__STM32F1__::-DARDUINO_ARCH_STM32::${core.includes}
+
+
+
+core.asflags=-g::-x::assembler-with-cpp::-MMD::-mcpu=${build.cpu}::-DF_CPU=${build.f_cpu}::-DARDUINO=${core.version}::-DARDUINO_${board}::-DARDUINO_ARCH_STM32F1::${board.flags}::-mthumb::-march=armv7-m::-D__STM32F1__::-DARDUINO_ARCH_STM32::-mthumb::${core.includes}
+
+
+
+
+
+core.ldflags=${option:opt.optimise}::-Wl,--gc-sections::-mcpu=${build.cpu}::-T${board:root}/${build.ldscript}::-Wl,-Map,${build.path}/${filename}.map::-L${board:root}/ld::-mthumb::-Wl,--check-sections::-Wl,--gc-sections::-Wl,--unresolved-symbols=report-all::-Wl,--warn-common::-Wl,--warn-section-align::-Wl,--warn-unresolved-symbols
+
+
+
+
 
 core.header=Arduino.h
 
@@ -40,3 +59,7 @@ options.lto.disabled.name=Disabled
 options.lto.disabled.ldflags=
 options.lto.enabled.name=Enabled
 options.lto.enabled.ldflags=-flto
+
+compile.autogen.bin=${objcopy}::-O::binary::${build.path}/${filename}.elf::${build.path}/${filename}.bin
+compile.autogen.lss=__builtin_stdin::${build.path}/${filename}.lss::${objdump}::-h::-S::${build.path}/${filename}.elf
+
